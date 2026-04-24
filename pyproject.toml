@@ -1,6 +1,6 @@
 [project]
 name = "catalogers_toolkit"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Sam Schlinkert", email="sschlink@pratt.edu" },
 ]
