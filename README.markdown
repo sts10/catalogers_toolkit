@@ -2,7 +2,7 @@
 
 Run `python src/example.py` for an example of what this code can do.
 
-## To use in a local script
+## To use in a script
 
 First, install the package from GitHub
 ```sh
