@@ -1,7 +1,7 @@
-from lib.crecord import CRecord
+from crecord import CRecord
 from pymarc import MARCReader
 
-marc_file = "/home/sschlinkert/code/marc-reader/test-data/test_10.mrc"
+marc_file = "./src/sample-marc-files.mrc"
 
 with open(marc_file, 'rb') as fh:
     reader = MARCReader(fh)
