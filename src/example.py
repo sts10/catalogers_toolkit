@@ -1,4 +1,4 @@
-from crecord import CRecord
+from catalogers_toolkit import CRecord
 from pymarc import MARCReader
 
 marc_file = "./src/sample-marc-files.mrc"
