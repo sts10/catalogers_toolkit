@@ -51,39 +51,38 @@ class CRecord:
     # 264 is a non-mandatory, repeatable field, which is a good test
     # of logic!
     def parse_264s(self, inputted_pymarc_record):
-        field264s_raw = inputted_pymarc_record.get_fields('264')
+        field264s_raw = inputted_pymarc_record.get_fields("264")
         # For our output, let's initialize a dictionary of lists, one
         # per subfield we're interested in
         field264s_cleaned = {
-                "a": [],
-                "b": [],
-                "c": [],
+            "a": [],
+            "b": [],
+            "c": [],
         }
         if field264s_raw:
             for field264 in field264s_raw:
-                this_a_field = field264.get_subfields('a')
+                this_a_field = field264.get_subfields("a")
                 if not this_a_field:
-                    field264s_cleaned['a'].append("No field 264a")
+                    field264s_cleaned["a"].append("No field 264a")
                 else:
                     for field264a in this_a_field:
-                        field264s_cleaned['a'].append(field264a)
-                this_b_field = field264.get_subfields('b')
+                        field264s_cleaned["a"].append(field264a)
+                this_b_field = field264.get_subfields("b")
                 if not this_b_field:
-                    field264s_cleaned['b'].append("No field 264b")
+                    field264s_cleaned["b"].append("No field 264b")
                 else:
                     for field264b in this_b_field:
-                        field264s_cleaned['b'].append(field264b)
-                this_c_field = field264.get_subfields('c')
+                        field264s_cleaned["b"].append(field264b)
+                this_c_field = field264.get_subfields("c")
                 if not this_c_field:
-                    field264s_cleaned['c'].append("No field 264c")
+                    field264s_cleaned["c"].append("No field 264c")
                 else:
                     for field264c in this_c_field:
-                        field264s_cleaned['c'].append(field264c)
-        else: 
+                        field264s_cleaned["c"].append(field264c)
+        else:
             field264s_cleaned = {
                 "a": ["No field 264"],
                 "b": ["No field 264"],
                 "c": ["No field 264"],
             }
         return field264s_cleaned
-
