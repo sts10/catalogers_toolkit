@@ -20,3 +20,4 @@ with open(marc_file, "rb") as fh:
         print(c_record.field00704_list)
         print(c_record.field00706_list)
         print(c_record.field100a)
+        print(c_record.field264)

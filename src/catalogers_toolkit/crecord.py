@@ -16,6 +16,7 @@ class CRecord:
             self.parse_007s(inputted_pymarc_record)
         )
         self.field100a = self.parse_100(inputted_pymarc_record)
+        self.field264 = self.parse_264s(inputted_pymarc_record)
 
     def parse_007s(self, inputted_pymarc_record):
         field00703_list = []
@@ -46,3 +47,43 @@ class CRecord:
         else:
             field100a = str("No field 100")
         return field100a
+
+    # 264 is a non-mandatory, repeatable field, which is a good test
+    # of logic!
+    def parse_264s(self, inputted_pymarc_record):
+        field264s_raw = inputted_pymarc_record.get_fields('264')
+        # For our output, let's initialize a dictionary of lists, one
+        # per subfield we're interested in
+        field264s_cleaned = {
+                "a": [],
+                "b": [],
+                "c": [],
+        }
+        if field264s_raw:
+            for field264 in field264s_raw:
+                this_a_field = field264.get_subfields('a')
+                if not this_a_field:
+                    field264s_cleaned['a'].append("No field 264a")
+                else:
+                    for field264a in this_a_field:
+                        field264s_cleaned['a'].append(field264a)
+                this_b_field = field264.get_subfields('b')
+                if not this_b_field:
+                    field264s_cleaned['b'].append("No field 264b")
+                else:
+                    for field264b in this_b_field:
+                        field264s_cleaned['b'].append(field264b)
+                this_c_field = field264.get_subfields('c')
+                if not this_c_field:
+                    field264s_cleaned['c'].append("No field 264c")
+                else:
+                    for field264c in this_c_field:
+                        field264s_cleaned['c'].append(field264c)
+        else: 
+            field264s_cleaned = {
+                "a": ["No field 264"],
+                "b": ["No field 264"],
+                "c": ["No field 264"],
+            }
+        return field264s_cleaned
+
