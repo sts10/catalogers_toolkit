@@ -97,3 +97,37 @@ class CRecord:
                 "c": ["No field 264"],
             }
         return field264s_cleaned
+
+    def parse_650s(self, inputted_pymarc_record):
+        cleaned_subjects = []
+        subjects = inputted_pymarc_record.get_fields("650")
+        if not subjects:
+            cleaned_subjects.append("No subjects")
+        else:
+            for subject in subjects:
+                # I don't think we have to loop through all subfields here, right?
+                # if subject.get("a"):
+                #     cleaned_subjects.append(subject.get("a"))
+                for code_value in subject:
+                    if code_value.code == "a":
+                        cleaned_subjects.append(code_value.value)
+        return cleaned_subjects
+
+    def parse_502s(self, inputted_pymarc_record):
+        cleaned_502s = []
+        raw_502s = inputted_pymarc_record.get_fields("502")
+        if not raw_502s:
+            cleaned_502s.append("No field 502")
+        else:
+            for field_502 in raw_502s:
+                field_502as = field_502.get_subfields("a")
+                if not field_502as:
+                    cleaned_502s.append("No 502a")
+                else:
+                    for code_value in field_502as:
+                        if code_value.code == "a":
+                            cleaned_502s.append(code_value.value)
+        return cleaned_502s
+
+    # def prep_aclr_csv_row(self):
+      #  return [self.ocn, self.ldr06, self.ldr07, 
