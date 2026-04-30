@@ -10,7 +10,7 @@ class RecordType(Enum):
 class CRecord:
     def __init__(self, inputted_pymarc_record):
         # Other stuff here
-        self.record_type = determine_record_type(inputted_pymarc_record)
+        self.record_type = self.determine_record_type(inputted_pymarc_record)
 
     def determine_record_type(self, inputted_pymarc_record):
         # insert record_type determination logic here
