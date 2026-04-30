@@ -3,6 +3,7 @@ class CRecord:
         raw_ocn = inputted_pymarc_record["001"]
         self.ocn = str(raw_ocn).replace("=001", "").strip()
         self.isbn = self.get_isbn(inputted_pymarc_record)
+        self.title = inputted_pymarc_record.get("245",{}).get("a",None)
         self.ldr06 = (
             inputted_pymarc_record.leader[6]
             if len(str(inputted_pymarc_record)) > 6
