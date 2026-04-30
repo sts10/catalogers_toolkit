@@ -9,6 +9,7 @@ with open(marc_file, "rb") as fh:
     for record in reader:
         # Check that we can read a field
         print(record["245"]["a"])
+        print(record.get("020", {}).get("a", None))
         # Now the key move: pass this pymarc-created record object
         # to catalogers_toolkit's CRecord (clean record) class
         c_record = CRecord(record)
@@ -16,6 +17,7 @@ with open(marc_file, "rb") as fh:
         # exactly as defined in catalogers_toolkit's CRecord class
         # definition
         print(c_record.ocn)
+        print(c_record.isbn)
         print(c_record.field00703_list)
         print(c_record.field00704_list)
         print(c_record.field00706_list)

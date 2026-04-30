@@ -2,11 +2,13 @@ class CRecord:
     def __init__(self, inputted_pymarc_record):
         raw_ocn = inputted_pymarc_record["001"]
         self.ocn = str(raw_ocn).replace("=001", "").strip()
+        self.isbn = self.get_isbn(inputted_pymarc_record)
         self.ldr06 = (
             inputted_pymarc_record.leader[6]
             if len(str(inputted_pymarc_record)) > 6
             else None
         )
+
         self.ldr07 = (
             inputted_pymarc_record.leader[7]
             if len(str(inputted_pymarc_record)) > 7
@@ -17,6 +19,14 @@ class CRecord:
         )
         self.field100a = self.parse_100(inputted_pymarc_record)
         self.field264 = self.parse_264s(inputted_pymarc_record)
+
+    def get_isbn(self, inputted_pymarc_record):
+        isbn = inputted_pymarc_record.get('020')
+        if isbn:
+            return isbn.get('a', None)
+        else:
+            return None
+        # Fancier version: return inputted_pymarc_record.get('020', {}).get('a', None)
 
     def parse_007s(self, inputted_pymarc_record):
         field00703_list = []
