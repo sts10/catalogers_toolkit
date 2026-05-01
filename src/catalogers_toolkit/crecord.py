@@ -1,3 +1,9 @@
+from enum import Enum
+
+class RecordType(Enum):
+    BIB = "Bibliographic Record"
+    LHR = "Local Holding Record"
+
 class CRecord:
     def __init__(self, inputted_pymarc_record):
         raw_ocn = inputted_pymarc_record["001"]
@@ -15,6 +21,8 @@ class CRecord:
             if len(str(inputted_pymarc_record.leader)) > 7
             else None
         )
+        self.record_type = self.determine_record_type(inputted_pymarc_record)
+
         self.field00703_list, self.field00704_list, self.field00706_list = (
             self.parse_007s(inputted_pymarc_record)
         )
@@ -32,6 +40,13 @@ class CRecord:
         else:
             return None
         # Fancier version: return inputted_pymarc_record.get('020', {}).get('a', None)
+
+    def determine_record_type(self, inputted_pymarc_record):
+        # Check leader position 6 to determine if this is an LHR or BIB
+        if self.ldr06.lower() in ["u","v","x","y"]:
+            return RecordType.LHR
+        else:
+            return RecordType.BIB
 
     # 007 is not mandatory and effectively not repeatable
     def parse_007s(self, inputted_pymarc_record):
