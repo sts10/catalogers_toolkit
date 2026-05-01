@@ -43,7 +43,7 @@ class CRecord:
 
     def determine_record_type(self, inputted_pymarc_record):
         # Check leader position 6 to determine if this is an LHR or BIB
-        if self.ldr06.lower() in ["u","v","x","y"]:
+        if self.ldr06.strip().lower() in ["u","v","x","y"]:
             return RecordType.LHR
         else:
             return RecordType.BIB
