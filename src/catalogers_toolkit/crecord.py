@@ -3,28 +3,32 @@ class CRecord:
         raw_ocn = inputted_pymarc_record["001"]
         self.ocn = str(raw_ocn).replace("=001", "").strip()
         self.isbn = self.get_isbn(inputted_pymarc_record)
-        self.title = inputted_pymarc_record.get("245",{}).get("a",None)
+        self.title = inputted_pymarc_record.get("245", {}).get("a", None)
+        # I don't know if we need this len check
         self.ldr06 = (
             inputted_pymarc_record.leader[6]
-            if len(str(inputted_pymarc_record)) > 6
+            if len(str(inputted_pymarc_record.leader)) > 6
             else None
         )
-
         self.ldr07 = (
             inputted_pymarc_record.leader[7]
-            if len(str(inputted_pymarc_record)) > 7
+            if len(str(inputted_pymarc_record.leader)) > 7
             else None
         )
         self.field00703_list, self.field00704_list, self.field00706_list = (
             self.parse_007s(inputted_pymarc_record)
         )
+        # To save RAM, we could call this only when we need them, not on initalization
         self.field100a = self.parse_100(inputted_pymarc_record)
         self.field264 = self.parse_264s(inputted_pymarc_record)
+        self.field008 = self.parse_008(inputted_pymarc_record)
+        self.field502s = self.parse_502s(inputted_pymarc_record)
+        self.field650s = self.parse_650s(inputted_pymarc_record)
 
     def get_isbn(self, inputted_pymarc_record):
-        isbn = inputted_pymarc_record.get('020')
+        isbn = inputted_pymarc_record.get("020")
         if isbn:
-            return isbn.get('a', None)
+            return isbn.get("a", None)
         else:
             return None
         # Fancier version: return inputted_pymarc_record.get('020', {}).get('a', None)
@@ -46,6 +50,19 @@ class CRecord:
                     field007data[6] if len(field007data) >= 7 else ""
                 )
         return field00703_list, field00704_list, field00706_list
+
+    # 008 is not repeatable, so we don't need to use a get_fields loop
+    def parse_008(self, inputted_pymarc_record):
+        # a bit unsure about this .value() call
+        raw_008 = inputted_pymarc_record["008"].value()
+        # We can do this more elegantly
+        clean_008 = {}
+        clean_008["21"] = raw_008[21] if len(raw_008) > 21 else ""
+        clean_008["23"] = raw_008[23] if len(raw_008) > 23 else ""
+        clean_008["26"] = raw_008[26] if len(raw_008) > 26 else ""
+        clean_008["29"] = raw_008[29] if len(raw_008) > 29 else ""
+        clean_008["33"] = raw_008[33] if len(raw_008) > 33 else ""
+        return clean_008
 
     def parse_100(self, inputted_pymarc_record):
         if inputted_pymarc_record.get_fields("100"):
@@ -110,7 +127,7 @@ class CRecord:
                 #     cleaned_subjects.append(subject.get("a"))
                 for code_value in subject:
                     if code_value.code == "a":
-                        cleaned_subjects.append(code_value.value)
+                        cleaned_subjects.append(str(code_value.value))
         return cleaned_subjects
 
     def parse_502s(self, inputted_pymarc_record):
@@ -126,8 +143,24 @@ class CRecord:
                 else:
                     for code_value in field_502as:
                         if code_value.code == "a":
-                            cleaned_502s.append(code_value.value)
+                            cleaned_502s.append(str(code_value.value))
         return cleaned_502s
 
-    # def prep_aclr_csv_row(self):
-      #  return [self.ocn, self.ldr06, self.ldr07, 
+    def prep_aclr_csv_row(self):
+        return [
+            self.ocn,
+            self.ldr06,
+            self.ldr07,
+            self.field008["21"],
+            self.field008["23"],
+            self.field008["26"],
+            self.field008["29"],
+            self.field008["33"],
+            self.title,
+            self.field650s,
+            self.field502s,
+            # Guessing we want to join these lists in to a single 
+            # string? using a space as a delimiter?
+            # '|'.join(str(e) for e in self.field650s),
+            # '|'.join(str(e) for e in self.field502s),
+        ]
