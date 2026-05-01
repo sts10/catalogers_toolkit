@@ -16,3 +16,45 @@ class CRecord:
         # insert record_type determination logic here
         return RecordType.BIB
 ```
+
+## A safe get function for classes
+
+```python 
+class MyClass:
+    def __init__(self, name):
+        self.name = name
+
+    def get(self, attr_name, default=None):
+        """Safely retrieve an attribute or return a default value."""
+        return getattr(self, attr_name, default)
+
+# Usage
+obj = MyClass("Alice")
+
+print(obj.get("name"))          # Output: Alice
+print(obj.get("age", "N/A"))    # Output: N/A (Attribute doesn't exist)
+print(obj.get("age"))           # Output: None (Default behavior)
+```
+
+For our purposes:
+```python 
+class MyClass:
+    def __init__(self, name):
+        self.name = name
+
+    def get(self, attr_name, default=None):
+        """Safely retrieve an attribute or return a default value."""
+        if default == None:
+            default = "No {0}".format(attr_name.replace("_", " "))
+        return getattr(self, attr_name, default)
+
+# Usage
+obj = MyClass("Alice")
+
+print(obj.get("name"))          # Output: Alice
+print(obj.get("age", "N/A"))    # Output: N/A (Attribute doesn't exist)
+print(obj.get("age"))           # Output: "No age"
+
+```
+
+
