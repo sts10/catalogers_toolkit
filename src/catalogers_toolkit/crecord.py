@@ -33,6 +33,7 @@ class CRecord:
             return None
         # Fancier version: return inputted_pymarc_record.get('020', {}).get('a', None)
 
+    # 007 is not mandatory and effectively not repeatable
     def parse_007s(self, inputted_pymarc_record):
         field00703_list = []
         field00704_list = []
