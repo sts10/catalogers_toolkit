@@ -24,5 +24,6 @@ with open(marc_file, "rb") as fh:
         print("100a: {0}".format(c_record.field100a))
         print("264: {0}".format(c_record.field264))
         print("Record type: {0}".format(c_record.record_type.value))
+        print("Location: " + c_record.location + ", " + c_record.shelving_location)
         print("ACLR row:")
         print(c_record.prep_aclr_csv_row())

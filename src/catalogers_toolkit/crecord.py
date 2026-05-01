@@ -33,6 +33,9 @@ class CRecord:
         self.field502s = self.parse_502s(inputted_pymarc_record)
         self.field650s = self.parse_650s(inputted_pymarc_record)
 
+        self.location = inputted_pymarc_record.get("852", {}).get("b", "No Branch")
+        self.shelving_location = inputted_pymarc_record.get("852", {}).get("c", "No shelving location")
+
     def get_isbn(self, inputted_pymarc_record):
         isbn = inputted_pymarc_record.get("020")
         if isbn:
