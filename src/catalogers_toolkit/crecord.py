@@ -42,6 +42,10 @@ class CRecord:
         """Usage:"""
         """print(obj.get("name"))          # Output: Alice"""
         """print(obj.get("age", "N/A"))    # Output: N/A (Attribute doesn't exist)"""
+        if default == None:
+            # We could return None here, but for fun, let's overwrite the default
+            # to reference the field name, e.g. "No isbn".
+            default = "No {0}".format(attr_name.replace("_", " "))
         return getattr(self, attr_name, default)
 
     def get_isbn(self, inputted_pymarc_record):

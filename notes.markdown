@@ -58,3 +58,17 @@ print(obj.get("age"))           # Output: "No age"
 ```
 
 
+```python
+def get_leader_position(self, record, position):
+    """Safely extract a leader position from a MARC record."""
+    """# Usage"""
+    """self.ldr07 = self.get_leader_position(inputted_pymarc_record, 7)"""
+    try:
+        leader = record.leader
+        if leader and len(leader) > position:
+            return leader[position]
+    except (AttributeError, TypeError):
+        pass # do nothing at all
+    # Effectively return None if error
+    return None
+```
