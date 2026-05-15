@@ -18,4 +18,26 @@ Then import the CRecord class:
 from catalogers_toolkit import CRecord
 ```
 
-Full example in `example.py`
+### When using a notebook like with Google Colab
+I think for Google Colab, you'll want to start your file with something like this:
+```
+from google.colab import drive
+pip install pymarc
+pip install git+https://github.com/sts10/catalogers_toolkit.git
+
+from pymarc import MARCReader
+from catalogers_toolkit import CRecord
+
+# Set a variable called marc_file
+
+with open(marc_file, "rb") as fh:
+    reader = MARCReader(fh, to_unicode=True, force_utf8=True, utf8_handling="replace")
+    for record in reader:
+        c_record = CRecord(record)
+        print("OCN: " + c_record.ocn)
+```
+
+### See the following files for more example usage Python code:
+* `example.py`
+* `example2.py`
+* `make-aclr-csv.py`
