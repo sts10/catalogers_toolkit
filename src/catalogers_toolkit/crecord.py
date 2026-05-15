@@ -217,10 +217,6 @@ class CRecord:
             self.field008["29"],
             self.field008["33"],
             self.title,
-            self.field650s,
-            self.field502s,
-            # Would it be better to join these lists in to a single
-            # string?
-            # '|'.join(str(e) for e in self.field650s),
-            # '|'.join(str(e) for e in self.field502s),
+            '|'.join(str(e) for e in self.field650s),
+            '|'.join(str(e) for e in self.field502s),
         ]
