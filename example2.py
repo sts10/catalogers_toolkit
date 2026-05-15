@@ -10,9 +10,10 @@ with open(marc_file, "rb") as fh:
     i = 0
     for record in reader:
         i = i + 1
-        if i > 15:
-            print("Breaking out of loop")
-            break
+        # if i > 15:
+            # print("Breaking out of loop")
+            # break
+
         # Check that we can read a field
         print(record.get("245", {}).get("a", None))
         print(record.get("020", {}).get("a", None))
@@ -23,13 +24,17 @@ with open(marc_file, "rb") as fh:
         # exactly as defined in catalogers_toolkit's CRecord class
         # definition
         print("OCN: " + c_record.ocn)
-        print("ISBN: {0}".format(c_record.isbn))
-        print("007 03: {0}".format(c_record.field00703_list))
-        print("007 04:{0}".format( c_record.field00704_list))
-        print("007 06: {0}".format(c_record.field00706_list))
-        print("100a: {0}".format(c_record.field100a))
-        print("264: {0}".format(c_record.field264))
-        print("Record type: {0}".format(c_record.record_type.value))
+        # print("ISBN: {0}".format(c_record.isbn))
+        # print("007 03: {0}".format(c_record.field00703_list))
+        # print("007 04:{0}".format( c_record.field00704_list))
+        # print("007 06: {0}".format(c_record.field00706_list))
+        # print("100a: {0}".format(c_record.field100a))
+        # print("264: {0}".format(c_record.field264))
+        print("Record type is {0}".format(c_record.record_type.value))
+        print("Because 004 is {0}".format(c_record.field004))
+        if c_record.record_type == "Local Holding Record":
+            print("Found an LHR!")
+            break
         print("Location: " + c_record.location + ", " + c_record.shelving_location)
         print("ACLR row:")
         print(c_record.prep_aclr_csv_row())

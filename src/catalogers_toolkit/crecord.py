@@ -27,6 +27,8 @@ class CRecord:
             self.parse_007s(inputted_pymarc_record)
         )
         # To save RAM, we could call this only when we need them, not on initalization
+        self.field004 = self.parse_004(inputted_pymarc_record)
+
         self.field100a = self.parse_100(inputted_pymarc_record)
         self.field264 = self.parse_264s(inputted_pymarc_record)
         self.field008 = self.parse_008(inputted_pymarc_record)
@@ -37,8 +39,8 @@ class CRecord:
         self.shelving_location = inputted_pymarc_record.get("852", {}).get("c", "No shelving location")
 
 
-    def get(self, attr_name, default=None):
-        """Safely retrieve an attribute or return a default value."""
+    def pretty_print(self, attr_name, default=None):
+        """Safely retrieve an attribute. If not found, return string of 'No [attribute] found'."""
         """Usage:"""
         """print(obj.get("name"))          # Output: Alice"""
         """print(obj.get("age", "N/A"))    # Output: N/A (Attribute doesn't exist)"""
@@ -48,6 +50,19 @@ class CRecord:
             default = "No {0}".format(attr_name.replace("_", " "))
         return getattr(self, attr_name, default)
 
+    def get_leader_position(self, record, position):
+        """Safely extract a leader position from a MARC record."""
+        """Usage:"""
+        """self.ldr07 = self.get_leader_position(inputted_pymarc_record, 7)"""
+        try:
+            leader = record.leader
+            if leader and len(leader) > position:
+                return leader[position]
+        except (AttributeError, TypeError):
+            pass # do nothing at all
+        # Effectively return None if error
+        return None
+
     def get_isbn(self, inputted_pymarc_record):
         isbn = inputted_pymarc_record.get("020")
         if isbn:
@@ -55,10 +70,13 @@ class CRecord:
         else:
             return None
         # Fancier version: return inputted_pymarc_record.get('020', {}).get('a', None)
+    
+    def parse_004(self, inputted_pymarc_record):
+        return inputted_pymarc_record.get_fields("004")
 
     def determine_record_type(self, inputted_pymarc_record):
-        # Check leader position 6 to determine if this is an LHR or BIB
-        if self.ldr06.strip().lower() in ["u","v","x","y"]:
+        # Check if field 004 is empty or not (we used to check ldr6 of u, v, x, or y)
+        if inputted_pymarc_record.get_fields("004") != []:
             # Note that LHRs may NOT have 245s or other fields
             # that are mandatory for Bib records!
             return RecordType.LHR
@@ -164,6 +182,7 @@ class CRecord:
         return cleaned_subjects
 
     def parse_502s(self, inputted_pymarc_record):
+        """ Thesis notes"""
         cleaned_502s = []
         raw_502s = inputted_pymarc_record.get_fields("502")
         if not raw_502s:
@@ -175,7 +194,9 @@ class CRecord:
                     cleaned_502s.append("No 502a")
                 else:
                     for code_value in field_502as:
-                        if code_value.code == "a":
+                        # Treading carefully here, because sometimes a code_value is just a string
+                        # And we don't want to error out
+                        if code_value and hasattr(code_value, 'code') and callable(code_value.code) and code_value.code == "a":
                             cleaned_502s.append(str(code_value.value))
         return cleaned_502s
 
