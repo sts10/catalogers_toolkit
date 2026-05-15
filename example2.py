@@ -35,6 +35,8 @@ with open(marc_file, "rb") as fh:
         if c_record.record_type == "Local Holding Record":
             print("Found an LHR!")
             break
+        if c_record.is_thesis: 
+            print("This is a thesis!")
         print("Location: " + c_record.location + ", " + c_record.shelving_location)
         print("ACLR row:")
         print(c_record.prep_aclr_csv_row())
