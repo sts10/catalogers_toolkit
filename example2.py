@@ -8,12 +8,11 @@ marc_file = "./test-files/metacoll.WVU.new.M20260327.T090358.CatalogerStatsPrint
 with open(marc_file, "rb") as fh:
     # Parse marc file with pymarc, as usual
     reader = MARCReader(fh)
-    i = 0
+    number_of_records_read = 0
+    number_of_LHRs_found_by_pymarc = 0
+    number_of_LHRs_found_by_ct = 0
     for record in reader:
-        i = i + 1
-        # if i > 15:
-            # print("Breaking out of loop")
-            # break
+        number_of_records_read = number_of_records_read + 1
 
         # Check that we can read a field
         print(record.get("245", {}).get("a", None))
@@ -35,18 +34,15 @@ with open(marc_file, "rb") as fh:
         print("Because 004 is {0}".format(c_record.field004))
         if c_record.record_type == RecordType.LHR:
             print("Found an LHR!")
+            number_of_LHRs_found_by_ct = number_of_LHRs_found_by_ct + 1
+        if record.get("004"): 
+            number_of_LHRs_found_by_pymarc = number_of_LHRs_found_by_pymarc + 1
         if c_record.is_thesis: 
             print("This is a thesis!")
         print("Location: " + c_record.location + ", " + c_record.shelving_location)
         print("ACLR row:")
         print(c_record.prep_aclr_csv_row())
 
-        if record.get("004") != None:
-            print("pymarc found an LHR!?")
-            print(record.get("004"))
-
-            print("c_record record type is ")
-            print(c_record.record_type)
-            break
-
+    print("Found " + str(number_of_records_read) + " records, " + str(number_of_LHRs_found_by_ct) + " were LHRs")
+    print("pymarc found " + str(number_of_LHRs_found_by_pymarc) + " LHRs")
     print("Done")

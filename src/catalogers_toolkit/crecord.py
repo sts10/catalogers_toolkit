@@ -1,8 +1,4 @@
-from enum import Enum
-
-class RecordType(Enum):
-    BIB = "Bibliographic Record"
-    LHR = "Local Holding Record"
+from .record_type import RecordType
 
 class CRecord:
     def __init__(self, inputted_pymarc_record):
