@@ -72,3 +72,31 @@ def get_leader_position(self, record, position):
     # Effectively return None if error
     return None
 ```
+
+## LHR notes
+
+1 LHR can contain multiple ITEMS, each with a unique barcode (876)
+
+We want one CSV of BIBs, one CSV of ITEMs (not LHRs).
+
+### Columns for our Items CSV?
+From Session 1, 00:36:11
+LCN -- MARC 001
+LHRLDR06 -- Leader 6
+LOCN -- MARC 004
+Location -- 852$b
+ShelvingLocation -- 852$c
+CopyInitialsList -- 852$x (Can be multiple, we want a list)
+BarcodeList -- 876$p
+
+
+To make the ITEMS CSV:
+```python
+for barcode in barcode_list:
+    csv_out.writerow([LCN, LDR06, LOCN, Location, ShelvingLocation, CopyInitialsList, barcode)
+
+```
+
+So we probably want a new, separate Item (or Barcode) Class!
+
+Any Bib that does not have an associated LHR is a e-resource?!
