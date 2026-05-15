@@ -76,7 +76,11 @@ class CRecord:
     def parse_004(self, inputted_pymarc_record):
         """Warning that this field only parses the FIRST instance of field 004, which may be repeatable?"""
         if inputted_pymarc_record.get_fields("004"):
-            return str(inputted_pymarc_record.get_fields("004")[0]).replace("=004", "").strip()
+            return (
+                str(inputted_pymarc_record.get_fields("004")[0])
+                .replace("=004", "")
+                .strip()
+            )
         else:
             return "No field 004"
 
@@ -218,7 +222,7 @@ class CRecord:
         """Only write BIBs here"""
         if self.record_type == RecordType.BIB:
             return [
-                self.ocn, # strip of left 0s?
+                self.ocn,  # strip of left 0s?
                 self.ldr06,
                 self.ldr07,
                 self.field008["21"],
@@ -282,19 +286,24 @@ class CRecord:
             if barcodes:
                 for barcode in barcodes:
                     this_item_record = [
-                        self.ocn, # in the case of an LHR, it's an "LCN"?!?
-                        self.ldr06, 
-                        self.field004, # LOCN -- MARC 004
-                        self.location, # Location -- 852$b
-                        self.shelving_location, # ShelvingLocation -- 852$c
-                        "|".join(str(ele) for ele in self.parse_copy_initials(inputted_pymarc_record)), 
-                        "|".join(str(ele) for ele in self.parse_item_initials(inputted_pymarc_record)),
-                        barcode, # Kind of think this should be the first column?
+                        self.ocn,  # in the case of an LHR, it's an "LCN"?!?
+                        self.ldr06,
+                        self.field004,  # LOCN -- MARC 004
+                        self.location,  # Location -- 852$b
+                        self.shelving_location,  # ShelvingLocation -- 852$c
+                        "|".join(
+                            str(ele)
+                            for ele in self.parse_copy_initials(inputted_pymarc_record)
+                        ),
+                        "|".join(
+                            str(ele)
+                            for ele in self.parse_item_initials(inputted_pymarc_record)
+                        ),
+                        barcode,  # Kind of think this should be the first column?
                     ]
                     csv_rows.append(this_item_record)
-        else: 
+        else:
             print("Tried to write an Item ACLR CSV row for a non-Item record type!")
             # Consider this a fatal error for now
             sys.exit(1)
         return csv_rows
-
