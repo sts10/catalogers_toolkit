@@ -12,7 +12,7 @@ aclr_item_rows = []
 with open(marc_file, "rb") as fh:
     # Parse marc file with pymarc, as usual
     # reader = MARCReader(fh)
-    reader = MARCReader(fh, to_unicode=True, force_utf8=True, utf8_handling='replace')
+    reader = MARCReader(fh, to_unicode=True, force_utf8=True, utf8_handling="replace")
     for record in reader:
         # Pass this pymarc-created record object
         # to catalogers_toolkit's CRecord (clean record) class
