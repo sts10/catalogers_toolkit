@@ -3,14 +3,12 @@ from catalogers_toolkit import RecordType
 from pymarc import MARCReader
 import csv
 
-# marc_file = "./src/sample-marc-files.mrc"
 marc_file = (
     "./test-files/metacoll.WVU.new.M20260327.T090358.CatalogerStatsPrintandE.1.mrc"
 )
 
 aclr_bib_rows = []
 aclr_item_rows = []
-# read in binary mode
 with open(marc_file, "rb") as fh:
     # Parse marc file with pymarc, as usual
     reader = MARCReader(fh)
@@ -21,16 +19,21 @@ with open(marc_file, "rb") as fh:
         # Now we can call any variable we want, parsed and cleaned
         # exactly as defined in catalogers_toolkit's CRecord class
         # definition
-        # Only write Bibs 
+
+        # In this example, we'll make two lists for ACLR: One of Bibs
+        # and one of Items
         if c_record.record_type == RecordType.BIB:
             this_aclr_row = c_record.prep_bib_aclr_csv_row()
             aclr_bib_rows.append(this_aclr_row)
         if c_record.record_type == RecordType.LHR:
-            # needs raw record from pymarc, for now
+            # Note that this method needs raw record from pymarc, for now
             these_alcr_rows = c_record.prep_item_aclr_csv_rows(record)
-            # Rather than append, let's concatenate
+            # Each (LHR) record can generate multiple barcods, so
+            # this method returns a list of CSV rows.
+            # Thus, rather than append, let's concatenate
             aclr_item_rows = aclr_item_rows + these_alcr_rows
 
+# Now we'll write our two separate lists to two new CSV files
 with open("aclr-bibs.csv", "w", newline="") as file:
     writer = csv.writer(file)
     writer.writerow(
