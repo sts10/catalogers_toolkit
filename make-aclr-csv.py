@@ -4,7 +4,9 @@ from pymarc import MARCReader
 import csv
 
 # marc_file = "./src/sample-marc-files.mrc"
-marc_file = "./test-files/metacoll.WVU.new.M20260327.T090358.CatalogerStatsPrintandE.1.mrc"
+marc_file = (
+    "./test-files/metacoll.WVU.new.M20260327.T090358.CatalogerStatsPrintandE.1.mrc"
+)
 
 aclr_rows = []
 with open(marc_file, "rb") as fh:
@@ -21,9 +23,22 @@ with open(marc_file, "rb") as fh:
         # This is likely inefficent
         aclr_rows.append(this_aclr_row)
 
-with open('aclr.csv', 'w', newline='') as file:
+with open("aclr.csv", "w", newline="") as file:
     writer = csv.writer(file)
-    writer.writerow(['OCN', 'LDR6', 'LDR7', '821', '00823', '00826', '00829', '00833', 'title', 'subjects', 'thesis notes'])
+    writer.writerow(
+        [
+            "OCN",
+            "LDR6",
+            "LDR7",
+            "821",
+            "00823",
+            "00826",
+            "00829",
+            "00833",
+            "title",
+            "subjects",
+            "thesis notes",
+        ]
+    )
     for aclr_row in aclr_rows:
         writer.writerow(aclr_row)
-

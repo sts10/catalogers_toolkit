@@ -1,5 +1,6 @@
 from .record_type import RecordType
 
+
 class CRecord:
     def __init__(self, inputted_pymarc_record):
         raw_ocn = inputted_pymarc_record["001"]
@@ -35,8 +36,9 @@ class CRecord:
         self.field650s = self.parse_650s(inputted_pymarc_record)
 
         self.location = inputted_pymarc_record.get("852", {}).get("b", "No Branch")
-        self.shelving_location = inputted_pymarc_record.get("852", {}).get("c", "No shelving location")
-
+        self.shelving_location = inputted_pymarc_record.get("852", {}).get(
+            "c", "No shelving location"
+        )
 
     def pretty_print(self, attr_name, default=None):
         """Safely retrieve an attribute. If not found, return string of 'No [attribute] found'."""
@@ -58,7 +60,7 @@ class CRecord:
             if leader and len(leader) > position:
                 return leader[position]
         except (AttributeError, TypeError):
-            pass # do nothing at all
+            pass  # do nothing at all
         # Effectively return None if error
         return None
 
@@ -69,7 +71,7 @@ class CRecord:
         else:
             return None
         # Fancier version: return inputted_pymarc_record.get('020', {}).get('a', None)
-    
+
     def parse_004(self, inputted_pymarc_record):
         return inputted_pymarc_record.get_fields("004")
 
@@ -184,7 +186,7 @@ class CRecord:
         return inputted_pymarc_record.get_fields("502") != []
 
     def parse_502s(self, inputted_pymarc_record):
-        """ Thesis notes"""
+        """Thesis notes"""
         cleaned_502s = []
         raw_502s = inputted_pymarc_record.get_fields("502")
         if not raw_502s:
@@ -198,7 +200,12 @@ class CRecord:
                     for code_value in field_502as:
                         # Treading carefully here, because sometimes a code_value is just a string
                         # And we don't want to error out
-                        if code_value and hasattr(code_value, 'code') and callable(code_value.code) and code_value.code == "a":
+                        if (
+                            code_value
+                            and hasattr(code_value, "code")
+                            and callable(code_value.code)
+                            and code_value.code == "a"
+                        ):
                             cleaned_502s.append(str(code_value.value))
         return cleaned_502s
 
@@ -213,6 +220,6 @@ class CRecord:
             self.field008["29"],
             self.field008["33"],
             self.title,
-            '|'.join(str(e) for e in self.field650s),
-            '|'.join(str(e) for e in self.field502s),
+            "|".join(str(e) for e in self.field650s),
+            "|".join(str(e) for e in self.field502s),
         ]
