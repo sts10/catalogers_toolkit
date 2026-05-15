@@ -36,6 +36,18 @@ class CRecord:
         self.location = inputted_pymarc_record.get("852", {}).get("b", "No Branch")
         self.shelving_location = inputted_pymarc_record.get("852", {}).get("c", "No shelving location")
 
+
+    def get(self, attr_name, default=None):
+        """Safely retrieve an attribute or return a default value."""
+        """Usage:"""
+        """print(obj.get("name"))          # Output: Alice"""
+        """print(obj.get("age", "N/A"))    # Output: N/A (Attribute doesn't exist)"""
+        if default == None:
+            # We could return None here, but for fun, let's overwrite the default
+            # to reference the field name, e.g. "No isbn".
+            default = "No {0}".format(attr_name.replace("_", " "))
+        return getattr(self, attr_name, default)
+
     def get_isbn(self, inputted_pymarc_record):
         isbn = inputted_pymarc_record.get("020")
         if isbn:
