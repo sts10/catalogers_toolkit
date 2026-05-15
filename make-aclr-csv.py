@@ -9,6 +9,7 @@ marc_file = (
 )
 
 aclr_bib_rows = []
+aclr_item_rows = []
 # read in binary mode
 with open(marc_file, "rb") as fh:
     # Parse marc file with pymarc, as usual
@@ -24,6 +25,11 @@ with open(marc_file, "rb") as fh:
         if c_record.record_type == RecordType.BIB:
             this_aclr_row = c_record.prep_bib_aclr_csv_row()
             aclr_bib_rows.append(this_aclr_row)
+        if c_record.record_type == RecordType.LHR:
+            # needs raw record from pymarc, for now
+            these_alcr_rows = c_record.prep_item_aclr_csv_rows(record)
+            # Rather than append, let's concatenate
+            aclr_item_rows = aclr_item_rows + these_alcr_rows
 
 with open("aclr-bibs.csv", "w", newline="") as file:
     writer = csv.writer(file)
@@ -42,5 +48,22 @@ with open("aclr-bibs.csv", "w", newline="") as file:
             "field502",
         ]
     )
-    for aclr_row in aclr_bib_rows:
-        writer.writerow(aclr_row)
+    for aclr_bib_row in aclr_bib_rows:
+        writer.writerow(aclr_bib_row)
+
+with open("aclr-items.csv", "w", newline="") as file:
+    writer = csv.writer(file)
+    writer.writerow(
+        [
+            "LCN",
+            "LHRLDR06",
+            "LOCN",
+            "Location",
+            "ShelvingLocation",
+            "CopyInitialsList",
+            "ItemInitialsList",
+            "Barcode",
+        ]
+    )
+    for aclr_item_row in aclr_item_rows:
+        writer.writerow(aclr_item_row)
