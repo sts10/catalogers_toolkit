@@ -8,7 +8,7 @@ marc_file = (
     "./test-files/metacoll.WVU.new.M20260327.T090358.CatalogerStatsPrintandE.1.mrc"
 )
 
-aclr_rows = []
+aclr_bib_rows = []
 # read in binary mode
 with open(marc_file, "rb") as fh:
     # Parse marc file with pymarc, as usual
@@ -20,26 +20,27 @@ with open(marc_file, "rb") as fh:
         # Now we can call any variable we want, parsed and cleaned
         # exactly as defined in catalogers_toolkit's CRecord class
         # definition
-        this_aclr_row = c_record.prep_aclr_csv_row()
-        # This is likely inefficent
-        aclr_rows.append(this_aclr_row)
+        # Only write Bibs 
+        if c_record.record_type == RecordType.BIB:
+            this_aclr_row = c_record.prep_bib_aclr_csv_row()
+            aclr_bib_rows.append(this_aclr_row)
 
 with open("aclr.csv", "w", newline="") as file:
     writer = csv.writer(file)
     writer.writerow(
         [
             "OCN",
-            "LDR6",
-            "LDR7",
-            "821",
-            "00823",
-            "00826",
-            "00829",
-            "00833",
+            "LDR06",
+            "LDR07",
+            "field00821",
+            "field00823",
+            "field00826",
+            "field00829",
+            "field00833",
             "title",
             "subjects",
-            "thesis notes",
+            "field502",
         ]
     )
-    for aclr_row in aclr_rows:
+    for aclr_row in aclr_bib_rows:
         writer.writerow(aclr_row)

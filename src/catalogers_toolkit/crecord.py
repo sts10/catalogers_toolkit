@@ -209,17 +209,19 @@ class CRecord:
                             cleaned_502s.append(str(code_value.value))
         return cleaned_502s
 
-    def prep_aclr_csv_row(self):
-        return [
-            self.ocn,
-            self.ldr06,
-            self.ldr07,
-            self.field008["21"],
-            self.field008["23"],
-            self.field008["26"],
-            self.field008["29"],
-            self.field008["33"],
-            self.title,
-            "|".join(str(e) for e in self.field650s),
-            "|".join(str(e) for e in self.field502s),
-        ]
+    def prep_bib_aclr_csv_row(self):
+        """Only write BIBs here"""
+        if self.record_type == RecordType.BIB:
+            return [
+                self.ocn, # strip of left 0s?
+                self.ldr06,
+                self.ldr07,
+                self.field008["21"],
+                self.field008["23"],
+                self.field008["26"],
+                self.field008["29"],
+                self.field008["33"],
+                self.title,
+                "|".join(str(e) for e in self.field650s),
+                "|".join(str(e) for e in self.field502s),
+            ]
