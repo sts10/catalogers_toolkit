@@ -1,4 +1,5 @@
 from catalogers_toolkit import CRecord
+from catalogers_toolkit import RecordType
 from pymarc import MARCReader
 
 # marc_file = "./src/sample-marc-files.mrc"
@@ -32,11 +33,20 @@ with open(marc_file, "rb") as fh:
         # print("264: {0}".format(c_record.field264))
         print("Record type is {0}".format(c_record.record_type.value))
         print("Because 004 is {0}".format(c_record.field004))
-        if c_record.record_type == "Local Holding Record":
+        if c_record.record_type == RecordType.LHR:
             print("Found an LHR!")
-            break
         if c_record.is_thesis: 
             print("This is a thesis!")
         print("Location: " + c_record.location + ", " + c_record.shelving_location)
         print("ACLR row:")
         print(c_record.prep_aclr_csv_row())
+
+        if record.get("004") != None:
+            print("pymarc found an LHR!?")
+            print(record.get("004"))
+
+            print("c_record record type is ")
+            print(c_record.record_type)
+            break
+
+    print("Done")
