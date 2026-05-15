@@ -25,7 +25,7 @@ with open(marc_file, "rb") as fh:
             this_aclr_row = c_record.prep_bib_aclr_csv_row()
             aclr_bib_rows.append(this_aclr_row)
 
-with open("aclr.csv", "w", newline="") as file:
+with open("aclr-bibs.csv", "w", newline="") as file:
     writer = csv.writer(file)
     writer.writerow(
         [
