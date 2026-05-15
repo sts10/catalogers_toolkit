@@ -9,6 +9,7 @@ marc_file = (
 )
 
 aclr_rows = []
+# read in binary mode
 with open(marc_file, "rb") as fh:
     # Parse marc file with pymarc, as usual
     reader = MARCReader(fh)
