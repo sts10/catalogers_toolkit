@@ -37,7 +37,4 @@ with open(marc_file, "rb") as fh:
         print("OCN: " + c_record.ocn)
 ```
 
-### See the following files for more example usage Python code:
-* `example.py`
-* `example2.py`
-* `make-aclr-csv.py`
+See `/bin` and/or `/examples` directories for more example usage.
