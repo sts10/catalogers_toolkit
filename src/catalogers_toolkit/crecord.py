@@ -183,12 +183,8 @@ class CRecord:
             cleaned_subjects.append("No subjects")
         else:
             for subject in subjects:
-                # To test: I don't think we have to loop through all subfields here, right?
-                # if subject.get("a"):
-                #     cleaned_subjects.append(subject.get("a"))
-                for code_value in subject:
-                    if code_value.code == "a":
-                        cleaned_subjects.append(str(code_value.value))
+                if subject.get_subfields("a"):
+                    cleaned_subjects = cleaned_subjects + subject.get_subfields("a")
         return cleaned_subjects
 
     def is_thesis_or_not(self, inputted_pymarc_record):
@@ -206,16 +202,16 @@ class CRecord:
                 if not field_502as:
                     cleaned_502s.append("No 502a")
                 else:
-                    for code_value in field_502as:
-                        # Treading carefully here, because sometimes a code_value is just a string
+                    for subfield in field_502as:
+                        # Treading carefully here, because sometimes a subfield is just a string
                         # And we don't want to error out
                         if (
-                            code_value
-                            and hasattr(code_value, "code")
-                            and callable(code_value.code)
-                            and code_value.code == "a"
+                            subfield
+                            and hasattr(subfield, "code")
+                            and callable(subfield.code)
+                            and subfield.code == "a"
                         ):
-                            cleaned_502s.append(str(code_value.value))
+                            cleaned_502s.append(str(subfield.value))
         return cleaned_502s
 
     def prep_bib_aclr_csv_row(self):
@@ -244,9 +240,8 @@ class CRecord:
         if not location:
             cleaned_copy_initials.append("No copy initials")
         else:
-            for subfield in location:
-                if subfield.code == "x":
-                    cleaned_copy_initials.append(str(subfield.value))
+            if location.get_subfields("x"):
+                cleaned_copy_initials = cleaned_copy_initials + subject.get_subfields("x")
         if cleaned_copy_initials == []:
             return ["No copy initials"]
         else:
@@ -254,27 +249,30 @@ class CRecord:
 
     def parse_barcodes(self, inputted_pymarc_record):
         cleaned_barcodes = []
-        barcodes = inputted_pymarc_record.get_fields("876")
-        if not barcodes:
+        item_info = inputted_pymarc_record.get_fields("876")
+        if not item_info:
             cleaned_barcodes.append("No barcodes")
         else:
-            for barcode in barcodes:
-                for subfield in barcode:
-                    if subfield.code == "p":
-                        cleaned_barcodes.append(str(subfield.value))
+            for piece_of_item_info in item_info:
+                if piece_of_item_info.get_subfields("p"):
+                    barcode = str(piece_of_item_info.get_subfields("p"))
+                    cleaned_barcodes.append(barcode)
         return cleaned_barcodes
 
     def parse_item_initials(self, inputted_pymarc_record):
         cleaned_item_initials = []
-        item_initials = inputted_pymarc_record.get_fields("876")
-        if not item_initials:
+        item_info = inputted_pymarc_record.get_fields("876")
+        if not item_info:
             cleaned_item_initials.append("No item initials")
         else:
-            for item_initial in item_initials:
-                for subfield in item_initial:
-                    if subfield.code == "x":
-                        cleaned_item_initials.append(str(subfield.value))
-        return cleaned_item_initials
+            for piece_of_item_info in item_info:
+                if piece_of_item_info.get_subfields("x"):
+                    item_initials = str(piece_of_item_info.get_subfields("x"))
+                    cleaned_item_initials.append(item_initials)
+        if cleaned_item_initials == []:
+            return ["No item initials"]
+        else:
+            return cleaned_item_initials
 
     def prep_item_aclr_csv_rows(self, inputted_pymarc_record):
         """This method loops through all records looking for LHRs"""
