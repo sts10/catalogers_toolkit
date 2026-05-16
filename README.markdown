@@ -4,7 +4,7 @@ An experiment in adding a data-cleaning layer on top of [pymarc](https://gitlab.
 
 Note that pymarc is NOT included as a dependency in this project at this time, and thus must be installed and imported separately.
 
-Run `python example.py` for an example of what this code can do.
+Run `python examples/example.py` for an example of what this code can do.
 
 ## To use in a script
 
