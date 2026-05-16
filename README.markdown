@@ -37,4 +37,4 @@ with open(marc_file, "rb") as fh:
         print("OCN: " + c_record.ocn)
 ```
 
-See `/bin` and/or `/examples` directories for more example usage.
+See the `/examples` directory for more example usage.
