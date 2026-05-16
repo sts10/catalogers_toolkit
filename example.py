@@ -19,7 +19,7 @@ with open(marc_file, "rb") as fh:
         print("OCN: " + c_record.ocn)
         print("ISBN: {0}".format(c_record.isbn))
         print("007 03: {0}".format(c_record.field00703_list))
-        print("007 04:{0}".format( c_record.field00704_list))
+        print("007 04:{0}".format(c_record.field00704_list))
         print("007 06: {0}".format(c_record.field00706_list))
         print("100a: {0}".format(c_record.field100a))
         print("264: {0}".format(c_record.field264))

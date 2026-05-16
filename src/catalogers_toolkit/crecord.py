@@ -46,7 +46,7 @@ class CRecord:
         """Usage:"""
         """print(obj.get("name"))          # Output: Alice"""
         """print(obj.get("age", "N/A"))    # Output: N/A (Attribute doesn't exist)"""
-        if default == None:
+        if default is None:
             # We could return None here, but for fun, let's overwrite the default
             # to reference the field name, e.g. "No isbn".
             default = "No {0}".format(attr_name.replace("_", " "))
@@ -241,7 +241,9 @@ class CRecord:
             cleaned_copy_initials.append("No copy initials")
         else:
             if location.get_subfields("x"):
-                cleaned_copy_initials = cleaned_copy_initials + subject.get_subfields("x")
+                cleaned_copy_initials = (
+                    cleaned_copy_initials + cleaned_copy_initials.get_subfields("x")
+                )
         if cleaned_copy_initials == []:
             return ["No copy initials"]
         else:
