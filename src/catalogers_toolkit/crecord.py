@@ -255,7 +255,8 @@ class CRecord:
         else:
             for piece_of_item_info in item_info:
                 if piece_of_item_info.get_subfields("p"):
-                    barcode = str(piece_of_item_info.get_subfields("p"))
+                    # For now, we're just going to take the first instance of subfield p
+                    barcode = piece_of_item_info.get_subfields("p")[0]
                     cleaned_barcodes.append(barcode)
         return cleaned_barcodes
 
@@ -267,7 +268,9 @@ class CRecord:
         else:
             for piece_of_item_info in item_info:
                 if piece_of_item_info.get_subfields("x"):
-                    item_initials = str(piece_of_item_info.get_subfields("x"))
+                    # x subfield is technically repeatable,
+                    # so if there's more than one, we'll join with |
+                    item_initials = "|".join(piece_of_item_info.get_subfields("x"))
                     cleaned_item_initials.append(item_initials)
         if cleaned_item_initials == []:
             return ["No item initials"]
