@@ -1,4 +1,4 @@
-# Catalog's Toolkit
+# Cataloger's Toolkit
 
 An experiment in adding a data-cleaning layer on top of [pymarc](https://gitlab.com/pymarc/pymarc), aimed at collection assessment.
 
