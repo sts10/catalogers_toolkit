@@ -100,3 +100,5 @@ for barcode in barcode_list:
 So we probably want a new, separate Item (or Barcode) Class!
 
 Any Bib that does not have an associated LHR is a e-resource?!
+
+Session 2 50:00 -- she talks about diversity auditing using WikiData...
