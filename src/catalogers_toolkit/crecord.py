@@ -22,7 +22,7 @@ class CRecord:
         # Determine if Bib or LHR
         self.record_type = self.determine_record_type(inputted_pymarc_record)
         # Determine if thesis or not
-        self.is_thesis = self.is_thesis_or_not(inputted_pymarc_record)
+        self.is_thesis = self.determine_if_thesis(inputted_pymarc_record)
 
         self.field00703_list, self.field00704_list, self.field00706_list = (
             self.parse_007s(inputted_pymarc_record)
@@ -187,7 +187,7 @@ class CRecord:
                     cleaned_subjects = cleaned_subjects + subject.get_subfields("a")
         return cleaned_subjects
 
-    def is_thesis_or_not(self, inputted_pymarc_record):
+    def determine_if_thesis(self, inputted_pymarc_record):
         return inputted_pymarc_record.get_fields("502") != []
 
     def parse_502s(self, inputted_pymarc_record):
