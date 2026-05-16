@@ -257,9 +257,11 @@ class CRecord:
         else:
             for piece_of_item_info in item_info:
                 if piece_of_item_info.get_subfields("p"):
-                    # For now, we're just going to take the first instance of subfield p
-                    barcode = piece_of_item_info.get_subfields("p")[0]
-                    cleaned_barcodes.append(barcode)
+                    # Guessing that there can be multiple barcodes for one item
+                    barcodes = piece_of_item_info.get_subfields("p")
+                    # so we'll append them all
+                    for barcode in barcodes:
+                        cleaned_barcodes.append(barcode)
         return cleaned_barcodes
 
     def parse_item_initials(self, inputted_pymarc_record):
@@ -287,6 +289,8 @@ class CRecord:
         if self.record_type == RecordType.LHR:
             barcodes = self.parse_barcodes(inputted_pymarc_record)
             if barcodes:
+                # Again, a given record could have multiple barcodes, each representing one
+                # item. So we iterate through each barcode and make a separate row for each.
                 for barcode in barcodes:
                     this_item_record = [
                         self.ocn,  # in the case of an LHR, it's an "LCN"?!?
@@ -302,7 +306,7 @@ class CRecord:
                             str(ele)
                             for ele in self.parse_item_initials(inputted_pymarc_record)
                         ),
-                        barcode,  # Kind of think this should be the first column?
+                        barcode,  # Kind of think this should be the first column? If it's the unique identifier?
                     ]
                     csv_rows.append(this_item_record)
         else:
